@@ -609,8 +609,10 @@ initializeTurbolinks = ->
     window.addEventListener 'popstate', installHistoryChangeHandler, false
 
 # Handle bug in Firefox 26/27 where history.state is initially undefined
+# Handle IE11 cross-origin issue (intranet, HTTPS, AngularJS) where accessing
+# window.history.state yields an "Unspecified error" exception
 historyStateIsDefined =
-  window.history.state != undefined or navigator.userAgent.match /Firefox\/2[6|7]/
+  typeof window.history.state isnt 'unknown' and (window.history.state != undefined or navigator.userAgent.match /Firefox\/2[6|7]/)
 
 browserSupportsPushState =
   window.history and window.history.pushState and window.history.replaceState and historyStateIsDefined
